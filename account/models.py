@@ -4,7 +4,9 @@ from django.contrib.auth.base_user import BaseUserManager
 
 from django.contrib.auth.models import AbstractUser
 
-# from .choices import *
+from .choices import USER_ROLE_CHOICES
+
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class UserManager(BaseUserManager):
     def create_user(self, number, password=None, **extra_fields):
@@ -104,6 +106,56 @@ class UserProfile(models.Model):
         help_text="Enter your address",
     )
 
-    # role =models.CharField(
-    #     choices=USER_ROLE
-    # )
+    role =models.CharField(
+        choices=USER_ROLE_CHOICES
+    )
+
+    created_at = models.DateTimeField(
+        verbose_name="creation date",
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        verbose_name="last update",
+        auto_now=True,
+    )
+
+
+
+class Reviews(models.Model):
+    title = models.CharField(
+        max_length=100,
+        verbose_name="title",
+    )
+
+    rating= models.FloatField(
+        verbose_name="rating",
+        help_text="Enter your rating",
+    validators=[
+        MinValueValidator(0),
+        MaxValueValidator(5),
+    ]
+    )
+
+    text = models.TextField(
+        verbose_name="text",
+        help_text="Enter your text",
+        max_length=1024,
+    )
+
+    vehicleID = models.CharField(
+        max_length=100,
+        verbose_name="the vehicle this review belongs to",
+    )
+
+    created_at = models.DateTimeField(
+        verbose_name="creation date",
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        verbose_name="last update",
+        auto_now=True,
+    )
+
+
